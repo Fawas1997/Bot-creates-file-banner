@@ -816,7 +816,7 @@ const uploadFile = async () => {
     } catch (error) {
       console.error("Error processing file:", error);
 
-      // Add the three separate error messages
+      // Add the error messages
       const errorMessageIndex1 = messages.value.length;
       messages.value.push({
         sender: "bot",
@@ -830,10 +830,11 @@ const uploadFile = async () => {
         scrollToBottom();
       });
 
+      // Modified this part to combine the text and URL
       const errorMessageIndex2 = messages.value.length;
       messages.value.push({
         sender: "bot",
-        text: "สามารถดูได้จาก Document: ",
+        text: "สามารถดูได้จาก Document:https://drive.google.com/file/d/1C4AHz3GUBkYBAA3i_N5uJeGO0DTIMfy4/view?usp=sharing",
         isTyping: true,
         displayText: "",
       });
@@ -846,27 +847,13 @@ const uploadFile = async () => {
       const errorMessageIndex3 = messages.value.length;
       messages.value.push({
         sender: "bot",
-        text: '<a href="https://drive.google.com/file/d/1C4AHz3GUBkYBAA3i_N5uJeGO0DTIMfy4/view?usp=sharing" target="_blank" class="text-blue-500 hover:text-blue-700 underline">https://drive.google.com/file/d/1C4AHz3GUBkYBAA3i_N5uJeGO0DTIMfy4/view?usp=sharing</a>',
-        isTyping: true,
-        displayText: "",
-        isHTML: true,
-      });
-
-      nextTick(() => {
-        typeMessage(messages.value[errorMessageIndex3], errorMessageIndex3);
-        scrollToBottom();
-      });
-
-      const errorMessageIndex4 = messages.value.length;
-      messages.value.push({
-        sender: "bot",
         text: "กรุณาลองใหม่อีกครั้ง",
         isTyping: true,
         displayText: "",
       });
 
       nextTick(() => {
-        typeMessage(messages.value[errorMessageIndex4], errorMessageIndex4);
+        typeMessage(messages.value[errorMessageIndex3], errorMessageIndex3);
         scrollToBottom();
       });
     }
