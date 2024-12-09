@@ -814,16 +814,44 @@ const uploadFile = async () => {
       }
     } catch (error) {
       console.error("Error processing file:", error);
-      const errorMessageIndex = messages.value.length;
+
+      // Add the three separate error messages
+      const errorMessageIndex1 = messages.value.length;
       messages.value.push({
         sender: "bot",
-        text: "ขออภัยครับ เกิดข้อผิดพลาดในการประมวลผล กรุณาลองใหม่อีกครั้ง",
+        text: "ขออภัยครับ เกิดข้อผิดพลาดในการประมวลผล กรุณาตรวจสอบ ไฟล์ XLSX อยู่ในรูปแบบถูกต้องหรือไม่",
         isTyping: true,
         displayText: "",
       });
 
       nextTick(() => {
-        typeMessage(messages.value[errorMessageIndex], errorMessageIndex);
+        typeMessage(messages.value[errorMessageIndex1], errorMessageIndex1);
+        scrollToBottom();
+      });
+
+      const errorMessageIndex2 = messages.value.length;
+      messages.value.push({
+        sender: "bot",
+        text: "สามารถดูได้จาก Document: https://drive.google.com/file/d/1C4AHz3GUBkYBAA3i_N5uJeGO0DTIMfy4/view?usp=sharing",
+        isTyping: true,
+        displayText: "",
+      });
+
+      nextTick(() => {
+        typeMessage(messages.value[errorMessageIndex2], errorMessageIndex2);
+        scrollToBottom();
+      });
+
+      const errorMessageIndex3 = messages.value.length;
+      messages.value.push({
+        sender: "bot",
+        text: "กรุณาลองใหม่อีกครั้ง",
+        isTyping: true,
+        displayText: "",
+      });
+
+      nextTick(() => {
+        typeMessage(messages.value[errorMessageIndex3], errorMessageIndex3);
         scrollToBottom();
       });
     }
