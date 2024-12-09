@@ -832,7 +832,7 @@ const uploadFile = async () => {
         const errorMessageIndex2 = messages.value.length;
         messages.value.push({
           sender: "bot",
-          text: 'สามารถดูได้จาก Document: <a href="https://drive.google.com/file/d/1C4AHz3GUBkYBAA3i_N5uJeGO0DTIMfy4/view?usp=sharing" target="_blank" style="color: blue; text-decoration: underline;">คลิกที่นี่</a>',
+          text: `สามารถดูได้จาก Document: <a href="https://drive.google.com/file/d/1C4AHz3GUBkYBAA3i_N5uJeGO0DTIMfy4/view?usp=sharing" target="_blank" class="text-blue-600 hover:text-blue-800 underline">คลิกที่นี่</a>`,
           isTyping: true,
           displayText: "",
         });
@@ -1067,5 +1067,15 @@ body {
 /* Add this to your existing style section */
 .message-text {
   white-space: pre-line;
+}
+
+/* Add styles for the link */
+.message-text a {
+  color: #2563eb; /* Tailwind's blue-600 */
+  text-decoration: underline;
+}
+
+.message-text a:hover {
+  color: #1d4ed8; /* Tailwind's blue-800 */
 }
 </style>
