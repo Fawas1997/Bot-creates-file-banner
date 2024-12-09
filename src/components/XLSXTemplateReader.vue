@@ -744,7 +744,6 @@ const handleFileUpload = (event) => {
 
 const uploadFile = async () => {
   if (selectedFile.value) {
-    // Reset Directus update state when new file is uploaded
     updateSuccess.value = false;
 
     const formData = new FormData();
@@ -815,7 +814,7 @@ const uploadFile = async () => {
     } catch (error) {
       console.error("Error processing file:", error);
 
-      // Add the three separate error messages
+      // Display error messages sequentially
       const errorMessageIndex1 = messages.value.length;
       messages.value.push({
         sender: "bot",
@@ -829,31 +828,35 @@ const uploadFile = async () => {
         scrollToBottom();
       });
 
-      const errorMessageIndex2 = messages.value.length;
-      messages.value.push({
-        sender: "bot",
-        text: "สามารถดูได้จาก Document: https://drive.google.com/file/d/1C4AHz3GUBkYBAA3i_N5uJeGO0DTIMfy4/view?usp=sharing",
-        isTyping: true,
-        displayText: "",
-      });
+      setTimeout(() => {
+        const errorMessageIndex2 = messages.value.length;
+        messages.value.push({
+          sender: "bot",
+          text: "สามารถดูได้จาก Document: [คลิกที่นี่](https://drive.google.com/file/d/1C4AHz3GUBkYBAA3i_N5uJeGO0DTIMfy4/view?usp=sharing)",
+          isTyping: true,
+          displayText: "",
+        });
 
-      nextTick(() => {
-        typeMessage(messages.value[errorMessageIndex2], errorMessageIndex2);
-        scrollToBottom();
-      });
+        nextTick(() => {
+          typeMessage(messages.value[errorMessageIndex2], errorMessageIndex2);
+          scrollToBottom();
+        });
 
-      const errorMessageIndex3 = messages.value.length;
-      messages.value.push({
-        sender: "bot",
-        text: "กรุณาลองใหม่อีกครั้ง",
-        isTyping: true,
-        displayText: "",
-      });
+        setTimeout(() => {
+          const errorMessageIndex3 = messages.value.length;
+          messages.value.push({
+            sender: "bot",
+            text: "กรุณาลองใหม่อีกครั้ง",
+            isTyping: true,
+            displayText: "",
+          });
 
-      nextTick(() => {
-        typeMessage(messages.value[errorMessageIndex3], errorMessageIndex3);
-        scrollToBottom();
-      });
+          nextTick(() => {
+            typeMessage(messages.value[errorMessageIndex3], errorMessageIndex3);
+            scrollToBottom();
+          });
+        }, 1500);
+      }, 1500);
     }
   }
 };
