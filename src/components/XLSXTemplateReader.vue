@@ -119,7 +119,10 @@
                 <span v-else-if="message.isTyping" class="typing-animation">
                   {{ message.displayText }}
                 </span>
-                <span v-else v-html="message.text"></span>
+                <span
+                  v-else
+                  v-html="formatMessageWithLinks(message.text)"
+                ></span>
               </div>
 
               <!-- File display for uploaded files -->
@@ -832,7 +835,7 @@ const uploadFile = async () => {
       const errorMessageIndex2 = messages.value.length;
       messages.value.push({
         sender: "bot",
-        text: 'สามารถดูได้จาก Document: <a href="https://drive.google.com/file/d/1C4AHz3GUBkYBAA3i_N5uJeGO0DTIMfy4/view?usp=sharing" target="_blank" class="text-blue-600 hover:text-blue-800 underline">https://drive.google.com/file/d/1C4AHz3GUBkYBAA3i_N5uJeGO0DTIMfy4/view?usp=sharing</a>',
+        text: "สามารถดูได้จาก Document: https://drive.google.com/file/d/1C4AHz3GUBkYBAA3i_N5uJeGO0DTIMfy4/view?usp=sharing",
         isTyping: true,
         displayText: "",
       });
@@ -944,6 +947,15 @@ onMounted(() => {
 onUnmounted(() => {
   document.removeEventListener("click", closeProfileMenu);
 });
+
+const formatMessageWithLinks = (text) => {
+  const urlRegex = /(https?:\/\/[^\s]+)/g;
+  return text.replace(
+    urlRegex,
+    (url) =>
+      `<a href="${url}" target="_blank" class="text-blue-600 hover:text-blue-800 underline">${url}</a>`
+  );
+};
 </script>
 
 <style>
