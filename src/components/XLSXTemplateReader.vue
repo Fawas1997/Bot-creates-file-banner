@@ -833,28 +833,10 @@ const uploadFile = async () => {
       const errorMessageIndex2 = messages.value.length;
       messages.value.push({
         sender: "bot",
-        text: "สามารถดูได้จาก Document: ",
-        isTyping: true,
-        displayText: "",
-      });
-
-      nextTick(() => {
-        typeMessage(messages.value[errorMessageIndex2], errorMessageIndex2);
-        scrollToBottom();
-      });
-
-      const errorMessageIndex3 = messages.value.length;
-      messages.value.push({
-        sender: "bot",
-        text: '<a href="https://drive.google.com/file/d/1C4AHz3GUBkYBAA3i_N5uJeGO0DTIMfy4/view?usp=sharing" target="_blank" class="text-blue-500 hover:text-blue-700 underline">https://drive.google.com/file/d/1C4AHz3GUBkYBAA3i_N5uJeGO0DTIMfy4/view?usp=sharing</a>',
+        text: 'สามารถดูได้จาก Document: <a href="https://drive.google.com/file/d/1C4AHz3GUBkYBAA3i_N5uJeGO0DTIMfy4/view?usp=sharing" target="_blank" class="text-blue-500 hover:text-blue-700 underline">https://drive.google.com/file/d/1C4AHz3GUBkYBAA3i_N5uJeGO0DTIMfy4/view?usp=sharing</a>',
         isTyping: true,
         displayText: "",
         isHTML: true,
-      });
-
-      nextTick(() => {
-        typeMessage(messages.value[errorMessageIndex3], errorMessageIndex3);
-        scrollToBottom();
       });
 
       const errorMessageIndex4 = messages.value.length;
