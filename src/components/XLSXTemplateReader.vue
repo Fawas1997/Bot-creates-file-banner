@@ -116,10 +116,10 @@
                   <span class="mr-2">{{ message.text }}</span>
                   <span class="loading-animation"></span>
                 </span>
-                <span v-else-if="message.isTyping" class="typing-animation">
-                  {{ message.displayText }}
-                </span>
-                <span v-else-if="message.isHTML" v-html="message.text"></span>
+                <span
+                  v-else-if="message.isTyping"
+                  v-html="message.displayText"
+                ></span>
                 <span v-else>{{ message.text }}</span>
               </div>
 
@@ -404,23 +404,50 @@ const scrollToBottom = () => {
 };
 
 const typeMessage = async (message, index) => {
-  const text = message.text;
-  let currentIndex = 0;
+  if (message.htmlContent) {
+    // สำหรับข้อความที่มีทั้งข้อความปกติและ HTML
+    const textPart = message.text;
+    const htmlPart = message.htmlContent;
+    let currentIndex = 0;
 
-  return new Promise((resolve) => {
-    const typingInterval = setInterval(() => {
-      if (currentIndex <= text.length) {
-        messages.value[index].displayText = text.slice(0, currentIndex);
-        currentIndex++;
-        scrollToBottom();
-      } else {
-        clearInterval(typingInterval);
-        messages.value[index].isTyping = false;
-        scrollToBottom();
-        resolve();
-      }
-    }, 50);
-  });
+    return new Promise((resolve) => {
+      const typingInterval = setInterval(() => {
+        if (currentIndex <= textPart.length) {
+          messages.value[index].displayText = textPart.slice(0, currentIndex);
+          if (currentIndex === textPart.length) {
+            // เมื่อพิมพ์ข้อความเสร็จ ให้เพิ่ม HTML content
+            messages.value[index].displayText += htmlPart;
+          }
+          currentIndex++;
+          scrollToBottom();
+        } else {
+          clearInterval(typingInterval);
+          messages.value[index].isTyping = false;
+          scrollToBottom();
+          resolve();
+        }
+      }, 50);
+    });
+  } else {
+    // สำหรับข้อความปกติ (โค้ดเดิม)
+    const text = message.text;
+    let currentIndex = 0;
+
+    return new Promise((resolve) => {
+      const typingInterval = setInterval(() => {
+        if (currentIndex <= text.length) {
+          messages.value[index].displayText = text.slice(0, currentIndex);
+          currentIndex++;
+          scrollToBottom();
+        } else {
+          clearInterval(typingInterval);
+          messages.value[index].isTyping = false;
+          scrollToBottom();
+          resolve();
+        }
+      }, 50);
+    });
+  }
 };
 
 const resetChat = () => {
@@ -838,13 +865,15 @@ const uploadFile = async () => {
       });
 
       // Add combined message with document link
-      const errorMessageIndex2 = messages.value.length;
+      const errorMessageIndex = messages.value.length;
       messages.value.push({
         sender: "bot",
-        text: 'สามารถดูได้จาก Document: <a href="https://drive.google.com/file/d/1C4AHz3GUBkYBAA3i_N5uJeGO0DTIMfy4/view?usp=sharing" target="_blank" class="text-blue-500 hover:text-blue-700 underline">https://drive.google.com/file/d/1C4AHz3GUBkYBAA3i_N5uJeGO0DTIMfy4/view?usp=sharing</a>',
-        isHTML: true,
+        text: "สามารถดูได้จาก Document: ",
+        htmlContent:
+          '<a href="https://drive.google.com/file/d/1C4AHz3GUBkYBAA3i_N5uJeGO0DTIMfy4/view?usp=sharing" target="_blank" class="text-blue-500 hover:text-blue-700 underline">https://drive.google.com/file/d/1C4AHz3GUBkYBAA3i_N5uJeGO0DTIMfy4/view?usp=sharing</a>',
+        isTyping: true,
+        displayText: "",
       });
-      scrollToBottom();
 
       nextTick(() => {
         typeMessage(messages.value[errorMessageIndex2], errorMessageIndex2);
