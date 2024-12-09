@@ -119,7 +119,7 @@
                 <span v-else-if="message.isTyping" class="typing-animation">
                   {{ message.displayText }}
                 </span>
-                <span v-else>{{ message.text }}</span>
+                <span v-else v-html="message.text"></span>
               </div>
 
               <!-- File display for uploaded files -->
@@ -744,6 +744,7 @@ const handleFileUpload = (event) => {
 
 const uploadFile = async () => {
   if (selectedFile.value) {
+    // Reset Directus update state when new file is uploaded
     updateSuccess.value = false;
 
     const formData = new FormData();
@@ -814,7 +815,7 @@ const uploadFile = async () => {
     } catch (error) {
       console.error("Error processing file:", error);
 
-      // Display error messages sequentially
+      // Add the three separate error messages
       const errorMessageIndex1 = messages.value.length;
       messages.value.push({
         sender: "bot",
@@ -828,35 +829,31 @@ const uploadFile = async () => {
         scrollToBottom();
       });
 
-      setTimeout(() => {
-        const errorMessageIndex2 = messages.value.length;
-        messages.value.push({
-          sender: "bot",
-          text: `สามารถดูได้จาก Document: <a href="https://drive.google.com/file/d/1C4AHz3GUBkYBAA3i_N5uJeGO0DTIMfy4/view?usp=sharing" target="_blank" class="text-blue-600 hover:text-blue-800 underline">คลิกที่นี่</a>`,
-          isTyping: true,
-          displayText: "",
-        });
+      const errorMessageIndex2 = messages.value.length;
+      messages.value.push({
+        sender: "bot",
+        text: 'สามารถดูได้จาก Document: <a href="https://drive.google.com/file/d/1C4AHz3GUBkYBAA3i_N5uJeGO0DTIMfy4/view?usp=sharing" target="_blank" class="text-blue-600 hover:text-blue-800 underline">https://drive.google.com/file/d/1C4AHz3GUBkYBAA3i_N5uJeGO0DTIMfy4/view?usp=sharing</a>',
+        isTyping: true,
+        displayText: "",
+      });
 
-        nextTick(() => {
-          typeMessage(messages.value[errorMessageIndex2], errorMessageIndex2);
-          scrollToBottom();
-        });
+      nextTick(() => {
+        typeMessage(messages.value[errorMessageIndex2], errorMessageIndex2);
+        scrollToBottom();
+      });
 
-        setTimeout(() => {
-          const errorMessageIndex3 = messages.value.length;
-          messages.value.push({
-            sender: "bot",
-            text: "กรุณาลองใหม่อีกครั้ง",
-            isTyping: true,
-            displayText: "",
-          });
+      const errorMessageIndex3 = messages.value.length;
+      messages.value.push({
+        sender: "bot",
+        text: "กรุณาลองใหม่อีกครั้ง",
+        isTyping: true,
+        displayText: "",
+      });
 
-          nextTick(() => {
-            typeMessage(messages.value[errorMessageIndex3], errorMessageIndex3);
-            scrollToBottom();
-          });
-        }, 1500);
-      }, 1500);
+      nextTick(() => {
+        typeMessage(messages.value[errorMessageIndex3], errorMessageIndex3);
+        scrollToBottom();
+      });
     }
   }
 };
@@ -1067,15 +1064,5 @@ body {
 /* Add this to your existing style section */
 .message-text {
   white-space: pre-line;
-}
-
-/* Add styles for the link */
-.message-text a {
-  color: #2563eb; /* Tailwind's blue-600 */
-  text-decoration: underline;
-}
-
-.message-text a:hover {
-  color: #1d4ed8; /* Tailwind's blue-800 */
 }
 </style>
