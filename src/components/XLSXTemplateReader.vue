@@ -842,10 +842,9 @@ const uploadFile = async () => {
       messages.value.push({
         sender: "bot",
         text: 'สามารถดูได้จาก Document: <a href="https://drive.google.com/file/d/1C4AHz3GUBkYBAA3i_N5uJeGO0DTIMfy4/view?usp=sharing" target="_blank" class="text-blue-500 hover:text-blue-700 underline">https://drive.google.com/file/d/1C4AHz3GUBkYBAA3i_N5uJeGO0DTIMfy4/view?usp=sharing</a>',
-        isTyping: true,
-        displayText: "",
         isHTML: true,
       });
+      scrollToBottom();
 
       nextTick(() => {
         typeMessage(messages.value[errorMessageIndex2], errorMessageIndex2);
