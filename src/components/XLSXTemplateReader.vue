@@ -751,6 +751,7 @@ const uploadFile = async () => {
     const formData = new FormData();
     formData.append("file", selectedFile.value);
 
+    // Add user message for file upload
     messages.value.push({
       sender: "user",
       text: `อัปโหลดไฟล์: ${selectedFile.value.name}`,
@@ -760,6 +761,7 @@ const uploadFile = async () => {
       isZipFile: false,
     });
 
+    // Add bot message for processing
     const loadingMessageIndex = messages.value.length;
     messages.value.push({
       sender: "bot",
@@ -768,9 +770,11 @@ const uploadFile = async () => {
     });
     scrollToBottom();
 
+    // Close file upload modal
     showFileUpload.value = false;
 
     try {
+      // Send file to the server
       const response = await axiosInstance.post("/upload", formData, {
         responseType: "blob",
       });
@@ -779,11 +783,13 @@ const uploadFile = async () => {
         const blob = response.data;
         const fileURL = URL.createObjectURL(blob);
 
+        // Store download data
         downloadData.value = {
           blob: blob,
           fileURL: fileURL,
         };
 
+        // Add success message
         const successMessageIndex = messages.value.length;
         messages.value.push({
           sender: "bot",
@@ -797,6 +803,7 @@ const uploadFile = async () => {
           scrollToBottom();
         });
 
+        // Ask user if they want to download the ZIP file
         setTimeout(() => {
           chatState.value = "zip_question";
           const questionIndex = messages.value.length;
@@ -816,7 +823,7 @@ const uploadFile = async () => {
     } catch (error) {
       console.error("Error processing file:", error);
 
-      // Add the three separate error messages
+      // Add error messages
       const errorMessageIndex1 = messages.value.length;
       messages.value.push({
         sender: "bot",
@@ -830,6 +837,7 @@ const uploadFile = async () => {
         scrollToBottom();
       });
 
+      // Add combined message with document link
       const errorMessageIndex2 = messages.value.length;
       messages.value.push({
         sender: "bot",
@@ -839,7 +847,13 @@ const uploadFile = async () => {
         isHTML: true,
       });
 
-      const errorMessageIndex4 = messages.value.length;
+      nextTick(() => {
+        typeMessage(messages.value[errorMessageIndex2], errorMessageIndex2);
+        scrollToBottom();
+      });
+
+      // Add retry message
+      const errorMessageIndex3 = messages.value.length;
       messages.value.push({
         sender: "bot",
         text: "กรุณาลองใหม่อีกครั้ง",
@@ -848,7 +862,7 @@ const uploadFile = async () => {
       });
 
       nextTick(() => {
-        typeMessage(messages.value[errorMessageIndex4], errorMessageIndex4);
+        typeMessage(messages.value[errorMessageIndex3], errorMessageIndex3);
         scrollToBottom();
       });
     }
